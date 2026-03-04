@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Haios — The Operating System for Human-AI Work</title>
+  <meta name="description" content="Haios engineers Intelligence Workflows for growing companies. Context before compute. People before tools. Decisions before dashboards." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --forest:   #1B4332;
+      --green:    #2D6A4F;
+      --sage:     #40916C;
+      --cream:    #F8F5F0;
+      --gold:     #B7934C;
+      --ink:      #1A1A1A;
+      --gray:     #6B7280;
+      --border:   rgba(27,67,50,0.12);
+      --sage-tint:rgba(64,145,108,0.07);
+      --font-sans:  'DM Sans', Arial, sans-serif;
+      --font-serif: 'DM Serif Display', Georgia, serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--sage); margin-bottom: 14px;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+      letter-spacing: 0.05em; padding: 15px 30px;
+      border-radius: 3px; cursor: pointer; transition: all 0.22s ease; border: none;
+    }
+    .btn-primary { background: var(--forest); color: #fff; }
+    .btn-primary:hover { background: var(--green); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(27,67,50,0.2); }
+    .btn-secondary { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+    .btn-secondary:hover { background: var(--forest); color: #fff; }
+    .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 0; transition: all 0.35s ease;
+    }
+    nav.scrolled {
+      background: rgba(248,245,240,0.96); backdrop-filter: blur(12px);
+      padding: 13px 0; border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 16px rgba(27,67,50,0.06);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { display: flex; flex-direction: column; }
+    .nav-logo { font-size: 17px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--forest); }
+    .nav-sub { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-top: 1px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--gray); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--forest); }
+    .nav-cta {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+      background: var(--forest); color: #fff;
+      padding: 10px 20px; border-radius: 3px; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--green); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 140px 0 100px; position: relative; overflow: hidden;
+      background: var(--forest);
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(64,145,108,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(64,145,108,0.07) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+    .hero-glow {
+      position: absolute; top: -15%; right: -8%;
+      width: 650px; height: 650px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(64,145,108,0.16) 0%, transparent 70%);
+    }
+    .hero-layout {
+      position: relative;
+      display: grid; grid-template-columns: 1fr 380px; gap: 72px; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--sage); border: 1px solid rgba(64,145,108,0.3);
+      padding: 7px 14px; border-radius: 2px; margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+    .hero-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--sage); }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(44px, 6.5vw, 82px);
+      font-weight: 400; line-height: 1.06; color: #fff; margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 0.8s ease 0.25s forwards;
+    }
+    h1 em { font-style: italic; color: var(--sage); }
+    .hero-sub {
+      font-size: 18px; font-weight: 300;
+      color: rgba(255,255,255,0.62); line-height: 1.72; max-width: 500px; margin-bottom: 44px;
+      opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+    .hero-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.8s ease 0.55s forwards;
+    }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.05em;
+      padding: 15px 30px; border-radius: 3px; cursor: pointer;
+      background: transparent; color: rgba(255,255,255,0.75);
+      border: 1.5px solid rgba(255,255,255,0.22); transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+    .hero-stats {
+      display: flex; flex-direction: column; gap: 2px;
+      opacity: 0; animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+    .hero-stat {
+      padding: 26px 30px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(64,145,108,0.18);
+      transition: background 0.25s;
+    }
+    .hero-stat:hover { background: rgba(255,255,255,0.07); }
+    .stat-num {
+      font-family: var(--font-serif); font-size: 46px; color: #fff; line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-num em { font-style: italic; color: var(--sage); }
+    .stat-label { font-size: 13px; color: rgba(255,255,255,0.45); }
+    .hero-scroll {
+      position: absolute; bottom: 38px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.22); animation: floatY 2.5s ease-in-out infinite;
+    }
+    .hero-scroll svg { width: 16px; height: 16px; }
+
+    /* PHILOSOPHY STRIP */
+    .philo-strip {
+      display: flex; background: var(--forest);
+      border-top: 1px solid rgba(64,145,108,0.2);
+    }
+    .philo-item {
+      flex: 1; padding: 32px 36px;
+      border-right: 1px solid rgba(64,145,108,0.15);
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .philo-item:last-child { border-right: none; }
+    .philo-n { font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); }
+    .philo-t { font-family: var(--font-serif); font-size: 16px; font-style: italic; color: rgba(255,255,255,0.75); line-height: 1.4; }
+
+    /* SECTIONS */
+    section { padding: 96px 0; }
+    h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(30px, 4vw, 50px);
+      font-weight: 400; line-height: 1.1; color: var(--forest);
+    }
+    h2 em { font-style: italic; color: var(--sage); }
+    h3 { font-family: var(--font-sans); font-size: 18px; font-weight: 600; color: var(--forest); line-height: 1.3; }
+    p { color: var(--gray); line-height: 1.75; }
+
+    /* PROBLEM */
+    #problem { background: var(--cream); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .problem-left h2 { margin-bottom: 18px; }
+    .problem-left p { font-size: 17px; }
+    .gold-pull {
+      margin-top: 32px; padding: 22px 26px;
+      border-left: 3px solid var(--gold);
+      background: rgba(183,147,76,0.05);
+    }
+    .gold-pull p { font-family: var(--font-serif); font-size: 19px; font-style: italic; color: var(--forest); line-height: 1.55; }
+    .triggers { display: flex; flex-direction: column; gap: 14px; }
+    .trigger {
+      padding: 22px 26px; border: 1px solid var(--border); border-radius: 4px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .trigger:hover { border-color: var(--sage); box-shadow: 0 4px 20px rgba(64,145,108,0.07); }
+    .t-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px; }
+    .trigger h3 { font-size: 15px; margin-bottom: 5px; }
+    .trigger p { font-size: 14px; }
+
+    /* HOW */
+    #how { background: #fff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .how-head { text-align: center; max-width: 520px; margin: 0 auto 56px; }
+    .how-head h2 { margin-bottom: 10px; }
+    .steps {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    }
+    .step {
+      padding: 40px 32px; border-right: 1px solid var(--border); transition: background 0.25s;
+    }
+    .step:last-child { border-right: none; }
+    .step:hover { background: var(--sage-tint); }
+    .step-n { font-family: var(--font-serif); font-size: 52px; color: rgba(27,67,50,0.07); line-height: 1; margin-bottom: 18px; }
+    .step-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px; }
+    .step h3 { font-size: 17px; margin-bottom: 10px; }
+    .step p { font-size: 14px; }
+
+    /* SERVICES */
+    #services { background: var(--cream); }
+    .svc-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; flex-wrap: wrap; gap: 20px; }
+    .svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .svc {
+      padding: 40px 34px; border: 1px solid var(--border); border-radius: 4px;
+      background: #fff; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative;
+    }
+    .svc:hover { border-color: var(--sage); box-shadow: 0 8px 36px rgba(64,145,108,0.09); transform: translateY(-4px); }
+    .svc.feat { border-color: var(--forest); background: var(--forest); }
+    .svc.feat h3, .svc.feat p { color: rgba(255,255,255,0.75); }
+    .svc.feat h3 { color: #fff; }
+    .svc.feat .eyebrow { color: var(--sage); }
+    .svc-ic {
+      width: 42px; height: 42px; background: var(--sage-tint); border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
+    }
+    .svc.feat .svc-ic { background: rgba(64,145,108,0.14); }
+    .svc-ic svg { width: 18px; height: 18px; color: var(--sage); }
+    .svc h3 { font-size: 19px; margin-bottom: 10px; }
+    .svc p { font-size: 15px; }
+    .svc-badge {
+      position: absolute; top: 0; right: 0;
+      background: var(--sage); color: #fff;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 0 4px 0 4px;
+    }
+    .svc-list { margin-top: 24px; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .svc-list li { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: rgba(255,255,255,0.6); }
+    .svc-list li::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--sage); flex-shrink:0; margin-top:7px; }
+
+    /* RESULTS */
+    #results { background: var(--forest); }
+    .res-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .res-left .eyebrow { color: rgba(64,145,108,0.8); }
+    .res-left h2 { color: #fff; margin-bottom: 16px; }
+    .res-left p { color: rgba(255,255,255,0.55); font-size: 17px; }
+    .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 36px; }
+    .res-tile { padding: 28px 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(64,145,108,0.14); }
+    .res-num { font-family: var(--font-serif); font-size: 48px; color: #fff; line-height: 1; margin-bottom: 5px; }
+    .res-num em { font-style: italic; color: var(--sage); }
+    .res-lbl { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .res-quote {
+      padding: 48px 44px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(64,145,108,0.18); border-radius: 4px;
+    }
+    .res-quote p {
+      font-family: var(--font-serif); font-size: 21px; font-style: italic;
+      color: rgba(255,255,255,0.82); line-height: 1.62; margin-bottom: 28px;
+    }
+    .res-source { display: flex; align-items: center; gap: 12px; }
+    .res-av {
+      width: 38px; height: 38px; border-radius: 50%; background: var(--sage);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0;
+    }
+    .res-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+    .res-role { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+    /* INSIGHTS */
+    #insights { background: var(--cream); }
+    .ins-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 44px; flex-wrap: wrap; gap: 16px; }
+    .ins-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .ins-card {
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: #fff;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .ins-card:hover { border-color: var(--sage); transform: translateY(-4px); box-shadow: 0 8px 28px rgba(64,145,108,0.08); }
+    .ins-img { height: 168px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .ins-img.c1 { background: linear-gradient(140deg, var(--forest) 0%, var(--green) 100%); }
+    .ins-img.c2 { background: linear-gradient(140deg, var(--green) 0%, #155534 100%); }
+    .ins-img.c3 { background: linear-gradient(140deg, #155534 0%, var(--forest) 100%); }
+    .ins-glyph { font-family: var(--font-serif); font-size: 72px; font-style: italic; color: rgba(255,255,255,0.09); line-height: 1; }
+    .ins-body { padding: 26px; }
+    .ins-cat { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px; }
+    .ins-card h3 { font-size: 17px; margin-bottom: 8px; line-height: 1.35; }
+    .ins-card p { font-size: 14px; margin-bottom: 16px; }
+    .ins-foot { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); }
+
+    /* DEMO AUDIT */
+    #demo-audit { background: #fff; border-top: 1px solid var(--border); }
+    .audit-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .audit-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(183,147,76,0.07); border: 1px solid rgba(183,147,76,0.28);
+      border-radius: 2px; padding: 6px 12px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .ab-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
+    .audit-left h2 { margin-bottom: 14px; }
+    .audit-left p { font-size: 17px; }
+    .audit-feats { margin-top: 32px; display: flex; flex-direction: column; gap: 18px; }
+    .audit-feat { display: flex; gap: 14px; align-items: flex-start; }
+    .af-num {
+      width: 26px; height: 26px; border-radius: 50%; background: var(--forest); color: #fff;
+      font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .af-body strong { display: block; font-size: 14px; font-weight: 600; color: var(--forest); margin-bottom: 2px; }
+    .af-body p { font-size: 14px; margin: 0; }
+    .audit-form {
+      padding: 44px; border: 1px solid var(--border); border-radius: 4px; background: var(--cream);
+    }
+    .audit-form h3 { font-size: 21px; margin-bottom: 5px; }
+    .audit-form > p { font-size: 14px; margin-bottom: 24px; }
+    .field {
+      width: 100%; background: #fff; border: 1.5px solid var(--border); border-radius: 3px;
+      color: var(--ink); font-family: var(--font-sans); font-size: 14px;
+      padding: 12px 15px; margin-bottom: 10px; outline: none; transition: border-color 0.2s;
+    }
+    .field::placeholder { color: var(--gray); opacity: 0.55; }
+    .field:focus { border-color: var(--sage); }
+    textarea.field { height: 84px; resize: none; }
+    .form-btn { width: 100%; justify-content: center; margin-top: 4px; }
+    .form-note { font-size: 11px; color: var(--gray); text-align: center; margin-top: 10px; opacity: 0.6; }
+
+    /* CTA */
+    #cta { background: var(--forest); text-align: center; }
+    .cta-in { max-width: 660px; margin: 0 auto; }
+    .cta-in h2 { color: #fff; font-size: clamp(34px, 5vw, 58px); margin-bottom: 18px; }
+    .cta-in p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; }
+    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-cream { background: var(--cream); color: var(--forest); }
+    .btn-cream:hover { background: #fff; transform: translateY(-2px); }
+    .btn-ghost-w {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.05em;
+      padding: 15px 30px; border-radius: 3px; cursor: pointer;
+      background: transparent; color: rgba(255,255,255,0.7);
+      border: 1.5px solid rgba(255,255,255,0.22); transition: all 0.2s;
+    }
+    .btn-ghost-w:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+    .cta-tag { margin-top: 44px; font-family: var(--font-serif); font-style: italic; font-size: 15px; color: rgba(255,255,255,0.2); }
+
+    /* FOOTER */
+    footer { background: var(--ink); padding: 64px 0 36px; }
+    .ft-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 56px; margin-bottom: 52px; }
+    .ft-logo { font-size: 17px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; margin-bottom: 10px; }
+    .ft-sub { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 14px; }
+    .ft-desc { font-size: 14px; color: rgba(255,255,255,0.38); line-height: 1.7; margin-bottom: 18px; }
+    .ft-tag { font-family: var(--font-serif); font-style: italic; font-size: 13px; color: rgba(255,255,255,0.18); }
+    .ft-col h4 { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); margin-bottom: 18px; }
+    .ft-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .ft-links a { font-size: 14px; color: rgba(255,255,255,0.38); transition: color 0.2s; }
+    .ft-links a:hover { color: rgba(255,255,255,0.82); }
+    .ft-bottom {
+      border-top: 1px solid rgba(255,255,255,0.07); padding-top: 26px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .ft-bottom p { font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes floatY { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(8px);} }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .reveal { opacity:0; transform:translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      .hero-layout, .two-col, .res-layout, .audit-layout, .ft-top { grid-template-columns: 1fr; gap: 44px; }
+      .steps, .svc-grid, .ins-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .philo-strip { flex-direction: column; }
+      .philo-item { border-right: none; border-bottom: 1px solid rgba(64,145,108,0.15); }
+      .res-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { display: none; }
+    }
+    @media (max-width: 600px) {
+      .steps, .svc-grid, .ins-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 40px; }
+      .container { padding: 0 22px; }
+      section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo">HAIOS</div>
+      <div class="nav-sub">Human-AI Operating System</div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#insights">Insights</a></li>
+      <li><a href="#demo-audit">AI Audit Tool</a></li>
+    </ul>
+    <a href="https://calendly.com/ron-wwrobots/30min" target="_blank" class="nav-cta">Book a Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-layout">
+      <div>
+        <div class="hero-badge">
+          <div class="hero-dot"></div>
+          The Operating System for Human-AI Work
+        </div>
+        <h1>Your best thinking,<br><em>finally scalable.</em></h1>
+        <p class="hero-sub">Haios captures the decision logic your best people carry — then builds the AI infrastructure to make it repeatable, trainable, and durable.</p>
+        <div class="hero-actions">
+          <a href="https://calendly.com/ron-wwrobots/30min" target="_blank" class="btn btn-primary">
+            Book an AI Value Audit
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="#how" class="btn-ghost">See How It Works</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="stat-num"><em>85%</em></div>
+          <div class="stat-label">Reduction in high-cost cognitive task time</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num"><em>14</em> days</div>
+          <div class="stat-label">From zero to a live, deployed agent</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num"><em>1.5×</em></div>
+          <div class="stat-label">FTE equivalent recovered, month one</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M4 9l4 4 4-4"/></svg>
+    Scroll
+  </div>
+</section>
+
+<!-- PHILOSOPHY STRIP -->
+<div class="philo-strip">
+  <div class="philo-item"><div class="philo-n">01</div><div class="philo-t">Context before compute.</div></div>
+  <div class="philo-item"><div class="philo-n">02</div><div class="philo-t">People before tools.</div></div>
+  <div class="philo-item"><div class="philo-n">03</div><div class="philo-t">Decisions before dashboards.</div></div>
+  <div class="philo-item"><div class="philo-n">04</div><div class="philo-t">Behavior change is the product.</div></div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="two-col">
+      <div class="reveal">
+        <span class="eyebrow">The Real Problem</span>
+        <h2>You don't have a<br><em>technology problem.</em></h2>
+        <p>Your best people carry decision logic that took years to build. It lives in their heads — not your systems. When they leave, it leaves with them.</p>
+        <div class="gold-pull">
+          <p>"When execution becomes free, organizational intelligence becomes everything."</p>
+        </div>
+      </div>
+      <div class="triggers reveal">
+        <div class="trigger">
+          <div class="t-label">Black Box Panic</div>
+          <h3>"We're terrified of garbage in, garbage out."</h3>
+          <p>We build the context layer before any technology touches your workflow. Safety first, speed second.</p>
+        </div>
+        <div class="trigger">
+          <div class="t-label">Generic Tool Fatigue</div>
+          <h3>"We tried AI but it doesn't know our business."</h3>
+          <p>That's the Context Gap. We train intelligence on your specific Unit of Work — not generic data.</p>
+        </div>
+        <div class="trigger">
+          <div class="t-label">Adoption Cliff</div>
+          <h3>"We bought the tool. Nobody uses it."</h3>
+          <p>You changed the tool, not the workflow. We redesign the job. Behavior change is the product.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="container">
+    <div class="how-head reveal">
+      <span class="eyebrow">The Methodology</span>
+      <h2>Four steps. Always<br><em>in sequence.</em></h2>
+      <p>No technology is deployed until the intelligence layer is in place.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-n">01</div>
+        <div class="step-lbl">Diagnose</div>
+        <h3>The People</h3>
+        <p>Interview, extract tacit knowledge, and find where friction actually lives — not where people think it does.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-n">02</div>
+        <div class="step-lbl">Map</div>
+        <h3>The Context</h3>
+        <p>Structure decision logic into a Business Ontology — the foundation that grounds AI in your specific reality.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-n">03</div>
+        <div class="step-lbl">Build</div>
+        <h3>The Infrastructure</h3>
+        <p>Custom agents trained on your context. An AI that thinks like your best employee, not a generic model.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-n">04</div>
+        <div class="step-lbl">Adopt</div>
+        <h3>The Behavior Shift</h3>
+        <p>Live workshops that move your team from manual executors to AI Managers. The human stays the architect.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="svc-head reveal">
+      <div>
+        <span class="eyebrow">Services</span>
+        <h2>Engagements designed<br><em>to compound.</em></h2>
+      </div>
+      <p style="max-width:320px; font-size:15px;">Each phase builds on the last. Every engagement produces both client value and a stronger intelligence layer.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc feat reveal">
+        <div class="svc-badge">Start Here</div>
+        <div class="svc-ic">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M10 6.5v4l2.5 1.5"/></svg>
+        </div>
+        <span class="eyebrow">Phase 1</span>
+        <h3>Workflow Intelligence Sprint</h3>
+        <p>14 days from zero to a live agent trained on your context. Diagnostic, map, build, and adoption workshop — all included.</p>
+        <ul class="svc-list">
+          <li>Team interviews + Workflow Intelligence Map</li>
+          <li>One live custom agent, deployed and tested</li>
+          <li>Full-team adoption workshop</li>
+          <li>AI opportunity map for future workflows</li>
+        </ul>
+      </div>
+      <div class="svc reveal">
+        <div class="svc-ic">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="3"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3"/></svg>
+        </div>
+        <span class="eyebrow">Phase 2</span>
+        <h3>Intelligence Retainer</h3>
+        <p>Ongoing system refinement, context layer maintenance, and next agent development. We stay in the machine, not on the sideline.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="svc-ic">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10h12M10 4l6 6-6 6"/></svg>
+        </div>
+        <span class="eyebrow">Phase 3</span>
+        <h3>Expansion Sprint</h3>
+        <p>Next high-priority workflow area. New agents. Deeper integration. Benchmarked against our pattern library across similar organizations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="container">
+    <div class="res-layout">
+      <div class="res-left reveal">
+        <span class="eyebrow">Proven Results</span>
+        <h2>Real agents.<br><em>Real teams. Real ROI.</em></h2>
+        <p>Haios-built agents deployed inside enterprise GTM operations have consistently delivered measurable, immediate impact — because context was built first.</p>
+        <div class="res-grid">
+          <div class="res-tile">
+            <div class="res-num"><em>85%</em></div>
+            <div class="res-lbl">Reduction in account prep time</div>
+          </div>
+          <div class="res-tile">
+            <div class="res-num"><em>6</em> min</div>
+            <div class="res-lbl">Per brief (was 40+ minutes)</div>
+          </div>
+          <div class="res-tile">
+            <div class="res-num"><em>100%</em></div>
+            <div class="res-lbl">Team adoption, sustained</div>
+          </div>
+          <div class="res-tile">
+            <div class="res-num">Day <em>1</em></div>
+            <div class="res-lbl">ROI positive from first use</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="res-quote">
+          <p>"The agent doesn't just save time. It changes how the team thinks before they walk into a room. That's the part you can't put on a slide — and it's the part that matters most."</p>
+          <div class="res-source">
+            <div class="res-av">R</div>
+            <div>
+              <div class="res-name">Ron Dawson</div>
+              <div class="res-role">Founder, Haios</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section id="insights">
+  <div class="container">
+    <div class="ins-head reveal">
+      <div>
+        <span class="eyebrow">Insights</span>
+        <h2>Thinking on human-AI<br><em>collaboration.</em></h2>
+      </div>
+      <a href="#" class="btn btn-secondary" style="font-size:12px; padding:10px 20px;">All Articles →</a>
+    </div>
+    <div class="ins-grid">
+      <div class="ins-card reveal">
+        <div class="ins-img c1"><div class="ins-glyph">01</div></div>
+        <div class="ins-body">
+          <div class="ins-cat">Methodology</div>
+          <h3>Why your AI pilot failed (and it's not the model's fault)</h3>
+          <p>You deployed compute before you had context. Here's what that costs.</p>
+          <div class="ins-foot"><span>5 min read</span><span>Coming Soon</span></div>
+        </div>
+      </div>
+      <div class="ins-card reveal">
+        <div class="ins-img c2"><div class="ins-glyph">02</div></div>
+        <div class="ins-body">
+          <div class="ins-cat">Strategy</div>
+          <h3>The knowledge distribution problem hiding inside every growing team</h3>
+          <p>Your best people carry logic that took years to build. Capture it before it walks out the door.</p>
+          <div class="ins-foot"><span>7 min read</span><span>Coming Soon</span></div>
+        </div>
+      </div>
+      <div class="ins-card reveal">
+        <div class="ins-img c3"><div class="ins-glyph">03</div></div>
+        <div class="ins-body">
+          <div class="ins-cat">The Book</div>
+          <h3>The AI Manager: the new role emerging inside every serious operation</h3>
+          <p>From <em>Working with Robots</em>. The human who steers the machine will own the next decade.</p>
+          <div class="ins-foot"><span>6 min read</span><span>Coming Soon</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO AUDIT -->
+<section id="demo-audit">
+  <div class="container">
+    <div class="audit-layout">
+      <div class="audit-left reveal">
+        <div class="audit-badge"><div class="ab-dot"></div>Coming Soon</div>
+        <span class="eyebrow">The AI Value Audit Tool</span>
+        <h2>Get your audit<br><em>before we talk.</em></h2>
+        <p>A self-serve diagnostic powered by the same methodology we use in every sprint. Maps your AI readiness and surfaces your highest-ROI workflow opportunities — no conversation required.</p>
+        <div class="audit-feats">
+          <div class="audit-feat">
+            <div class="af-num">1</div>
+            <div class="af-body">
+              <strong>15-minute structured intake</strong>
+              <p>Answer questions about your team, workflows, and biggest friction points.</p>
+            </div>
+          </div>
+          <div class="audit-feat">
+            <div class="af-num">2</div>
+            <div class="af-body">
+              <strong>AI-generated diagnostic report</strong>
+              <p>Your top AI opportunities ranked by ROI, with estimated time and cost savings.</p>
+            </div>
+          </div>
+          <div class="audit-feat">
+            <div class="af-num">3</div>
+            <div class="af-body">
+              <strong>No pitch. Just signal.</strong>
+              <p>A real diagnostic. Useful whether you work with Haios or not.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="audit-right reveal">
+        <div class="audit-form">
+          <h3>Get Early Access</h3>
+          <p>Join the waitlist. We'll notify you when the tool is live.</p>
+          <form id="auditForm" onsubmit="handleSubmit(event)">
+            <input type="text" class="field" placeholder="Your name" required />
+            <input type="email" class="field" placeholder="Work email" required />
+            <input type="text" class="field" placeholder="Company name" />
+            <textarea class="field" placeholder="What's your biggest operational bottleneck? (optional)"></textarea>
+            <button type="submit" class="btn btn-primary form-btn">
+              Join the Waitlist
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </button>
+          </form>
+          <div id="formOk" style="display:none; padding:20px; text-align:center; color:var(--sage); font-weight:600; font-size:15px;">
+            ✓ You're on the list. We'll be in touch.
+          </div>
+          <p class="form-note">No spam. One email when it's live.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-in reveal">
+      <span class="eyebrow" style="color:rgba(64,145,108,0.65);">Start the Conversation</span>
+      <h2>Ready to make your<br><em>best thinking scalable?</em></h2>
+      <p>A 30-minute conversation. We come prepared with a hypothesis about where your operational friction lives.</p>
+      <div class="cta-row">
+        <a href="https://calendly.com/ron-wwrobots/30min" target="_blank" class="btn btn-cream">
+          Book Your AI Value Audit
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a href="#demo-audit" class="btn-ghost-w">Join the Audit Waitlist</a>
+      </div>
+      <div class="cta-tag">Context before compute · People before tools · Decisions before dashboards</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="ft-top">
+      <div>
+        <div class="ft-logo">HAIOS</div>
+        <div class="ft-sub">Human-AI Operating System</div>
+        <p class="ft-desc">The connective layer between raw AI capability and real business utility. We engineer Intelligence Workflows that turn organizational knowledge into scalable decisions.</p>
+        <p class="ft-tag">Context before compute.</p>
+      </div>
+      <div class="ft-col">
+        <h4>Services</h4>
+        <ul class="ft-links">
+          <li><a href="#services">Workflow Intelligence Sprint</a></li>
+          <li><a href="#services">Intelligence Retainer</a></li>
+          <li><a href="#services">Expansion Sprint</a></li>
+          <li><a href="#demo-audit">AI Value Audit Tool</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4>Company</h4>
+        <ul class="ft-links">
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#insights">Insights</a></li>
+          <li><a href="#">Working with Robots ↗</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4>Contact</h4>
+        <ul class="ft-links">
+          <li><a href="https://calendly.com/ron-wwrobots/30min" target="_blank">Book a Call</a></li>
+          <li><a href="mailto:ron@haios.co">ron@haios.co</a></li>
+          <li><a href="https://haios.co">haios.co</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <p>© 2026 Haios — Human-AI Operating System</p>
+      <p>haios.co · ron@haios.co</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+  // Reveal on scroll
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 75);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
+  els.forEach(el => io.observe(el));
+
+  // Waitlist form
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('auditForm').style.display = 'none';
+    document.getElementById('formOk').style.display = 'block';
+  }
+</script>
+</body>
+</html>
