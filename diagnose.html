@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprint Diagnostic — Haios</title>
+  <meta name="description" content="Answer 3 questions. Get a personalized 14-day AI sprint plan built around your specific problem." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --forest:   #1B4332;
+      --green:    #2D6A4F;
+      --sage:     #40916C;
+      --cream:    #F8F5F0;
+      --gold:     #B7934C;
+      --ink:      #1A1A1A;
+      --gray:     #6B7280;
+      --border:   rgba(27,67,50,0.12);
+      --sage-tint:rgba(64,145,108,0.07);
+      --font-sans:  'DM Sans', Arial, sans-serif;
+      --font-serif: 'DM Serif Display', Georgia, serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--cream);color:var(--ink);font-family:var(--font-sans);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh}
+
+    /* ── NAV ── */
+    .diag-nav{padding:24px 40px;display:flex;align-items:center;justify-content:space-between}
+    .diag-brand{display:flex;flex-direction:column}
+    .diag-logo{font-size:17px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--forest);text-decoration:none}
+    .diag-sub{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-top:1px}
+    .back-link{font-size:13px;font-weight:500;color:var(--gray);text-decoration:none;transition:color .2s}
+    .back-link:hover{color:var(--forest)}
+
+    /* ── HERO / LANDING ── */
+    #landing{min-height:calc(100vh - 80px);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--forest);padding:80px 40px;text-align:center;position:relative;overflow:hidden}
+    #landing .atmos{position:absolute;inset:0;pointer-events:none}
+    #landing .atmos .g1{position:absolute;top:-10%;left:5%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(64,145,108,0.12) 0%,transparent 70%)}
+    #landing .atmos .g2{position:absolute;bottom:0;right:-5%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(45,106,79,0.1) 0%,transparent 70%)}
+    .landing-content{position:relative;z-index:1;max-width:800px}
+    .eyebrow{display:inline-block;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);margin-bottom:20px}
+    .landing-content h1{font-family:var(--font-serif);font-size:clamp(36px,5.5vw,64px);font-weight:400;line-height:1.1;color:#fff;margin-bottom:8px}
+    .landing-content h1 em{font-style:italic;color:var(--sage)}
+    .landing-content .subtitle{font-size:17px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.7;max-width:600px;margin:0 auto 48px}
+    .goal-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:720px;margin:0 auto}
+    .goal-card{background:rgba(255,255,255,0.06);border:1.5px solid rgba(64,145,108,0.25);border-radius:6px;padding:32px 24px;cursor:pointer;transition:all .25s ease;text-align:center}
+    .goal-card:hover{background:rgba(255,255,255,0.1);border-color:rgba(64,145,108,0.5);transform:translateY(-3px)}
+    .goal-card h3{font-family:var(--font-sans);font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+    .goal-card p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;margin:0}
+
+    /* ── CHAT VIEW ── */
+    #chatView{display:none;flex-direction:column;min-height:calc(100vh - 80px);background:var(--cream)}
+    .chat-header{padding:8px 40px;display:flex;justify-content:flex-end;align-items:center}
+    .progress-dots{display:flex;gap:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(27,67,50,0.15);transition:background .3s}
+    .dot.filled{background:var(--forest)}
+    .chat-messages{flex:1;max-width:800px;width:100%;margin:0 auto;padding:32px 40px;overflow-y:auto}
+    .message{margin-bottom:20px;opacity:0;transform:translateY(12px);animation:msgIn .4s ease forwards}
+    @keyframes msgIn{to{opacity:1;transform:translateY(0)}}
+    .msg-user{display:flex;justify-content:flex-end}
+    .msg-user .msg-bubble{background:var(--forest);color:#fff;padding:14px 20px;border-radius:16px 16px 4px 16px;max-width:400px;font-size:14px;line-height:1.55}
+    .msg-bot{display:flex;align-items:flex-start;gap:12px}
+    .msg-avatar{width:32px;height:32px;border-radius:6px;background:#fff;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--forest);flex-shrink:0}
+    .msg-bot .msg-bubble{background:transparent;color:var(--ink);font-size:15px;line-height:1.65;max-width:600px;padding-top:6px}
+    .chat-input-area{padding:16px 40px 24px;max-width:800px;width:100%;margin:0 auto}
+    .chat-input-wrap{display:flex;align-items:center;background:#fff;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .2s}
+    .chat-input-wrap:focus-within{border-color:var(--sage)}
+    .chat-input{flex:1;border:none;outline:none;font-family:var(--font-sans);font-size:15px;padding:16px 20px;background:transparent;color:var(--ink)}
+    .chat-input::placeholder{color:var(--gray)}
+    .chat-send{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--forest);border:none;cursor:pointer;transition:background .2s;margin:4px;border-radius:6px;flex-shrink:0}
+    .chat-send:hover{background:var(--green)}
+    .chat-send:disabled{background:rgba(27,67,50,0.3);cursor:not-allowed}
+    .chat-send svg{width:18px;height:18px;color:#fff}
+    .typing-indicator{display:flex;align-items:center;gap:12px;margin-bottom:20px;opacity:0;animation:msgIn .3s ease forwards}
+    .typing-dots{display:flex;gap:4px}
+    .typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--gray);animation:bounce .6s infinite alternate}
+    .typing-dots span:nth-child(2){animation-delay:.15s}
+    .typing-dots span:nth-child(3){animation-delay:.3s}
+    @keyframes bounce{to{opacity:.3;transform:translateY(-4px)}}
+
+    /* ── LOADING / GENERATING ── */
+    #generating{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 80px);background:var(--forest);text-align:center;padding:40px}
+    .gen-content{position:relative;z-index:1}
+    .gen-spinner{width:48px;height:48px;border:3px solid rgba(64,145,108,0.2);border-top-color:var(--sage);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 28px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .gen-content h2{font-family:var(--font-serif);font-size:28px;color:#fff;margin-bottom:8px}
+    .gen-content p{font-size:15px;color:rgba(255,255,255,0.5)}
+
+    /* ── SPRINT PLAN ── */
+    #sprintPlan{display:none}
+    .sprint-header{max-width:800px;margin:0 auto;padding:64px 40px 32px;text-align:left}
+    .sprint-header .eyebrow{color:var(--sage)}
+    .sprint-header h1{font-family:var(--font-serif);font-size:clamp(32px,5vw,52px);font-weight:400;line-height:1.12;color:var(--forest);margin-bottom:16px}
+    .sprint-header h1 em{font-style:italic;color:var(--sage)}
+    .sprint-summary{font-size:16px;color:var(--gray);line-height:1.7;max-width:650px}
+    .sprint-divider{max-width:800px;margin:0 auto;padding:0 40px}
+    .sprint-divider hr{border:none;border-top:1px solid var(--border)}
+    .opportunity-block{max-width:800px;margin:32px auto;padding:0 40px}
+    .opp-inner{background:rgba(183,147,76,0.05);border-left:4px solid var(--gold);padding:28px 32px;border-radius:0 6px 6px 0}
+    .opp-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+    .opp-text{font-family:var(--font-serif);font-size:20px;font-weight:400;color:var(--forest);line-height:1.5}
+    .phases{max-width:800px;margin:16px auto 0;padding:0 40px}
+    .phase{border-left:4px solid var(--sage);padding:24px 28px;margin-bottom:20px;background:#fff;border-radius:0 6px 6px 0}
+    .phase-label{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+    .phase h3{font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--forest);margin-bottom:8px}
+    .phase p{font-size:14px;color:var(--gray);line-height:1.7;margin:0}
+    .sprint-columns{max-width:800px;margin:40px auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:48px}
+    .sprint-col-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);margin-bottom:12px}
+    .sprint-col p{font-size:15px;color:var(--ink);line-height:1.7}
+    .sprint-tagline{max-width:800px;margin:0 auto;padding:0 40px 48px}
+    .sprint-tagline p{font-family:var(--font-serif);font-size:15px;font-style:italic;color:var(--sage);opacity:0.7}
+
+    /* ── CONTACT CTA ── */
+    .contact-cta{background:var(--forest);padding:80px 40px;text-align:center;position:relative;overflow:hidden}
+    .contact-cta .atmos{position:absolute;inset:0;pointer-events:none}
+    .contact-cta .atmos .g1{position:absolute;top:0;left:10%;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(64,145,108,0.08) 0%,transparent 70%)}
+    .contact-cta .atmos .g2{position:absolute;bottom:0;right:10%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(45,106,79,0.06) 0%,transparent 70%)}
+    .contact-inner{position:relative;z-index:1;max-width:480px;margin:0 auto}
+    .contact-inner h2{font-family:var(--font-serif);font-size:clamp(28px,4vw,40px);font-weight:400;font-style:italic;color:#fff;margin-bottom:10px}
+    .contact-inner>p{font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:36px}
+    .contact-form{text-align:left}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+    .form-field{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(64,145,108,0.25);border-radius:4px;color:#fff;font-family:var(--font-sans);font-size:14px;padding:14px 16px;outline:none;transition:border-color .2s}
+    .form-field::placeholder{color:rgba(255,255,255,0.35)}
+    .form-field:focus{border-color:var(--sage)}
+    .form-field.full{margin-bottom:10px}
+    .form-submit{width:100%;padding:18px;background:var(--cream);color:var(--forest);border:none;font-family:var(--font-sans);font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all .22s ease;margin-top:4px}
+    .form-submit:hover{background:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.15)}
+    .form-submit:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+    .form-success{display:none;text-align:center;padding:24px}
+    .form-success .ok-icon{width:48px;height:48px;border-radius:50%;background:rgba(64,145,108,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;color:var(--sage)}
+    .form-success h3{font-family:var(--font-serif);font-size:22px;color:#fff;margin-bottom:6px}
+    .form-success p{font-size:14px;color:rgba(255,255,255,0.45)}
+
+    /* ── FOOTER ── */
+    .diag-footer{background:var(--cream);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+    .diag-footer .ft-brand{display:flex;flex-direction:column}
+    .diag-footer .ft-logo{font-size:14px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--forest)}
+    .diag-footer .ft-sub{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray)}
+    .diag-footer .ft-copy{font-size:12px;color:var(--gray)}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:700px){
+      .goal-cards{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .sprint-columns{grid-template-columns:1fr;gap:32px}
+      .diag-nav,.chat-messages,.chat-input-area,.sprint-header,.sprint-divider,.opportunity-block,.phases,.sprint-columns,.sprint-tagline{padding-left:22px;padding-right:22px}
+      .contact-cta{padding:60px 22px}
+      .diag-footer{padding:20px 22px}
+    }
+
+    /* ── HIDDEN STATE ── */
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="diag-nav">
+  <a href="/" class="diag-brand">
+    <div class="diag-logo">HAIOS</div>
+    <div class="diag-sub">Human-AI Operating System</div>
+  </a>
+  <a href="/" class="back-link">&larr; Back to haios.co</a>
+</nav>
+
+<!-- STEP 1: LANDING -->
+<section id="landing">
+  <div class="atmos"><div class="g1"></div><div class="g2"></div></div>
+  <div class="landing-content">
+    <div class="eyebrow">The Sprint Diagnostic</div>
+    <h1>Find out exactly where AI creates value <em>for your business.</em></h1>
+    <p class="subtitle">Answer 3 questions. Get a personalized 14-day AI sprint plan built around your specific problem.</p>
+    <div class="goal-cards">
+      <div class="goal-card" onclick="selectGoal('Cut costs','Where is money leaking that AI could stop?')">
+        <h3>Cut costs</h3>
+        <p>Where is money leaking that AI could stop?</p>
+      </div>
+      <div class="goal-card" onclick="selectGoal('Move faster','What\'s slowing your team down every day?')">
+        <h3>Move faster</h3>
+        <p>What's slowing your team down every day?</p>
+      </div>
+      <div class="goal-card" onclick="selectGoal('I\'m not sure yet','Show me where AI fits my business')">
+        <h3>I'm not sure yet</h3>
+        <p>Show me where AI fits my business</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: CHAT -->
+<section id="chatView">
+  <div class="chat-header">
+    <div class="progress-dots">
+      <div class="dot" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+      <div class="dot" id="dot3"></div>
+    </div>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input-area">
+    <div class="chat-input-wrap">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type your response..." autocomplete="off" />
+      <button class="chat-send" id="chatSend" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: GENERATING -->
+<section id="generating">
+  <div class="atmos"><div class="g1"></div><div class="g2"></div></div>
+  <div class="gen-content">
+    <div class="gen-spinner"></div>
+    <h2>Building your sprint plan...</h2>
+    <p>Analyzing your answers to design a personalized 14-day roadmap.</p>
+  </div>
+</section>
+
+<!-- STEP 4: SPRINT PLAN OUTPUT -->
+<section id="sprintPlan"></section>
+
+<!-- STEP 5: CONTACT FORM -->
+<div id="contactSection" class="contact-cta hidden">
+  <div class="atmos"><div class="g1"></div><div class="g2"></div></div>
+  <div class="contact-inner">
+    <h2>Ready to run this for real?</h2>
+    <p>The Sprint Diagnostic shows you the plan. We build it with you.</p>
+    <div class="contact-form" id="contactForm">
+      <div class="form-row">
+        <input type="text" class="form-field" id="cfName" placeholder="First Name *" required />
+        <input type="text" class="form-field" id="cfCompany" placeholder="Company" />
+      </div>
+      <input type="email" class="form-field full" id="cfEmail" placeholder="Email *" required />
+      <input type="tel" class="form-field full" id="cfPhone" placeholder="Phone (optional)" />
+      <button class="form-submit" id="cfSubmit" onclick="submitContact()">Send Me the Full Plan &rarr;</button>
+    </div>
+    <div class="form-success" id="formSuccess">
+      <div class="ok-icon">&#10003;</div>
+      <h3>We'll be in touch.</h3>
+      <p>Expect your personalized plan within 24 hours.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="diag-footer">
+  <div class="ft-brand">
+    <div class="ft-logo">HAIOS</div>
+    <div class="ft-sub">Human-AI Operating System</div>
+  </div>
+  <div class="ft-copy">&copy; 2026 HAIOS</div>
+</footer>
+
+<script>
+// ── STATE ──
+let currentGoal = '';
+let questionIndex = 0;
+let conversationMessages = []; // messages for Claude API
+let chatHistory = [];          // for sprint generation context
+
+// ── GOAL SELECTION ──
+function selectGoal(goal, desc) {
+  currentGoal = goal;
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('chatView').style.display = 'flex';
+
+  // Show user's goal as first message
+  addMessage('user', 'I want to: ' + goal);
+
+  // Start the conversation with Claude
+  conversationMessages = [
+    { role: 'user', content: 'The user selected the goal: "' + goal + '" (' + desc + '). Ask them the first question: What is their industry and current team size?' }
+  ];
+
+  questionIndex = 1;
+  updateDots();
+  fetchBotResponse();
+}
+
+// ── CHAT UI ──
+function addMessage(type, text) {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'message msg-' + type;
+
+  if (type === 'user') {
+    div.innerHTML = '<div class="msg-bubble">' + escapeHtml(text) + '</div>';
+  } else {
+    div.innerHTML = '<div class="msg-avatar">H</div><div class="msg-bubble">' + escapeHtml(text) + '</div>';
+  }
+
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping() {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'typing-indicator';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<div class="msg-avatar">H</div><div class="typing-dots"><span></span><span></span><span></span></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function updateDots() {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('dot' + i).classList.toggle('filled', i <= questionIndex);
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ── SEND MESSAGE ──
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  addMessage('user', text);
+  chatHistory.push({ question: questionIndex, answer: text });
+
+  // The assistant message was already appended by fetchBotResponse — just add the user reply
+  conversationMessages.push({ role: 'user', content: text });
+
+  questionIndex++;
+  updateDots();
+
+  if (questionIndex > 3) {
+    // All 3 questions answered — generate sprint plan
+    setTimeout(() => {
+      document.getElementById('chatView').style.display = 'none';
+      document.getElementById('generating').style.display = 'flex';
+      generateSprintPlan();
+    }, 600);
+  } else {
+    fetchBotResponse();
+  }
+}
+
+// Enter key to send
+document.getElementById('chatInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+// ── API CALLS ──
+async function fetchBotResponse() {
+  const sendBtn = document.getElementById('chatSend');
+  const input = document.getElementById('chatInput');
+  sendBtn.disabled = true;
+  input.disabled = true;
+  showTyping();
+
+  try {
+    const res = await fetch('/api/diagnose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'chat',
+        messages: conversationMessages
+      })
+    });
+
+    const data = await res.json();
+    hideTyping();
+
+    if (data.content && data.content[0] && data.content[0].text) {
+      const botText = data.content[0].text;
+      addMessage('bot', botText);
+      conversationMessages.push({ role: 'assistant', content: botText });
+    } else {
+      addMessage('bot', 'Sorry, something went wrong. Please try refreshing the page.');
+    }
+  } catch (err) {
+    hideTyping();
+    addMessage('bot', 'Connection error. Please check your internet and try again.');
+  }
+
+  sendBtn.disabled = false;
+  input.disabled = false;
+  input.focus();
+}
+
+async function generateSprintPlan() {
+  // Build context from the chat
+  const contextSummary = chatHistory.map(h => 'Q' + h.question + ': ' + h.answer).join('\n');
+
+  try {
+    const res = await fetch('/api/diagnose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'sprint',
+        messages: [
+          {
+            role: 'user',
+            content: 'Generate a sprint plan based on this diagnostic conversation:\n\nGoal: ' + currentGoal + '\n\n' + contextSummary + '\n\nFull conversation:\n' + conversationMessages.map(m => m.role + ': ' + m.content).join('\n')
+          }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    let planText = data.content?.[0]?.text || '';
+
+    // Parse JSON from response (handle potential markdown wrapping)
+    planText = planText.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+    const plan = JSON.parse(planText);
+
+    renderSprintPlan(plan);
+  } catch (err) {
+    console.error('Sprint generation error:', err);
+    // Fallback plan
+    renderSprintPlan({
+      title: 'Your Custom AI Sprint',
+      summary: 'Based on your answers, we\'ve identified a clear opportunity to reduce operational costs through targeted AI deployment.',
+      opportunity: 'A custom AI agent trained on your specific business context, designed to automate the workflow bottleneck you described.',
+      phases: [
+        { label: 'Days 1–3', title: 'Knowledge Extraction', description: 'We map how your team actually makes decisions and identify the implicit rules that drive your workflow.' },
+        { label: 'Days 4–7', title: 'Context Layer Build', description: 'We structure your team\'s knowledge into an AI-ready format that preserves the nuance generic tools miss.' },
+        { label: 'Days 8–14', title: 'Agent Deployment', description: 'We deploy a working AI agent into your workflow and measure the impact against your current baseline.' }
+      ],
+      captured: 'We capture the implicit decision-making logic your best people use every day, turning individual expertise into a permanent company asset.',
+      outcome: 'A functional AI agent that operates with your team\'s judgment, delivering measurable productivity improvements from day one.'
+    });
+  }
+}
+
+// ── RENDER SPRINT PLAN ──
+function renderSprintPlan(plan) {
+  document.getElementById('generating').style.display = 'none';
+
+  // Split title for italic styling
+  const titleParts = plan.title.split(' ');
+  const lastTwoWords = titleParts.slice(-2).join(' ');
+  const firstWords = titleParts.slice(0, -2).join(' ');
+
+  const sprintHtml = `
+    <div class="sprint-header">
+      <div class="eyebrow">Your Sprint Plan</div>
+      <h1>${escapeHtml(firstWords)} <em>${escapeHtml(lastTwoWords)}</em></h1>
+      <p class="sprint-summary">${escapeHtml(plan.summary)}</p>
+    </div>
+    <div class="sprint-divider"><hr/></div>
+    <div class="opportunity-block">
+      <div class="opp-inner">
+        <div class="opp-label">The Opportunity</div>
+        <div class="opp-text">${escapeHtml(plan.opportunity)}</div>
+      </div>
+    </div>
+    <div class="phases">
+      ${plan.phases.map(p => `
+        <div class="phase">
+          <div class="phase-label">${escapeHtml(p.label)}</div>
+          <h3>${escapeHtml(p.title)}</h3>
+          <p>${escapeHtml(p.description)}</p>
+        </div>
+      `).join('')}
+    </div>
+    <div class="sprint-columns">
+      <div class="sprint-col">
+        <div class="sprint-col-label">What Gets Captured</div>
+        <p>${escapeHtml(plan.captured)}</p>
+      </div>
+      <div class="sprint-col">
+        <div class="sprint-col-label">After 14 Days You Have</div>
+        <p>${escapeHtml(plan.outcome)}</p>
+      </div>
+    </div>
+    <div class="sprint-tagline">
+      <p>This is the Haios difference. Agents built without this context fail.</p>
+    </div>
+  `;
+
+  const section = document.getElementById('sprintPlan');
+  section.innerHTML = sprintHtml;
+  section.style.display = 'block';
+  document.getElementById('contactSection').classList.remove('hidden');
+
+  window.scrollTo({ top: section.offsetTop - 40, behavior: 'smooth' });
+}
+
+// ── CONTACT FORM ──
+function submitContact() {
+  const name = document.getElementById('cfName').value.trim();
+  const email = document.getElementById('cfEmail').value.trim();
+  const company = document.getElementById('cfCompany').value.trim();
+  const phone = document.getElementById('cfPhone').value.trim();
+
+  if (!name || !email) {
+    alert('Please fill in your name and email.');
+    return;
+  }
+
+  const btn = document.getElementById('cfSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  // Build form data with diagnostic context
+  const formData = {
+    name: name,
+    email: email,
+    company: company,
+    phone: phone,
+    goal: currentGoal,
+    diagnostic_answers: chatHistory.map(h => 'Q' + h.question + ': ' + h.answer).join(' | '),
+    _subject: 'Sprint Diagnostic: ' + (company || name)
+  };
+
+  // TODO: Replace with real Formspree endpoint
+  fetch('https://formspree.io/f/mwvrwzqv', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(res => {
+    if (res.ok) {
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      throw new Error('Form submission failed');
+    }
+  })
+  .catch(err => {
+    btn.disabled = false;
+    btn.textContent = 'Send Me the Full Plan →';
+    alert('Something went wrong. Please try again or email ron@haios.co directly.');
+  });
+}
+</script>
+</body>
+</html>
