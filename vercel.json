@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/diagnose", "destination": "/diagnose.html" }
+    { "source": "/diagnose", "destination": "/diagnose.html" },
+    { "source": "/insights/why-your-ai-pilot-failed", "destination": "/insights/why-your-ai-pilot-failed.html" }
   ]
 }

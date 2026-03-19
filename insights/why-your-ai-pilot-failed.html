@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Your AI Pilot Failed (and It's Not the Model's Fault) | Haios</title>
+  <meta name="description" content="You deployed compute before you had context. Here's what that costs and what to do instead." />
+  <meta name="author" content="Ron Cohen" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Why Your AI Pilot Failed (and It's Not the Model's Fault)" />
+  <meta property="og:description" content="You deployed compute before you had context. Here's what that costs and what to do instead." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://haios.co/insights/why-your-ai-pilot-failed" />
+  <!-- Canonical -->
+  <link rel="canonical" href="https://haios.co/insights/why-your-ai-pilot-failed" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Haios Design Tokens ── */
+    :root {
+      --color-forest:       #1B4332;
+      --color-forest-mid:   #2D6A4F;
+      --color-sage:         #40916C;
+      --color-cream:        #F8F5F0;
+      --color-gold:         #B7934C;
+      --color-near-black:   #1A1A1A;
+      --color-mid-gray:     #6B7280;
+      --color-rule:         #D9D4CC;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --measure:      68ch;
+      --spacing-xl:   4rem;
+      --spacing-lg:   2.5rem;
+      --spacing-md:   1.5rem;
+      --spacing-sm:   1rem;
+      --spacing-xs:   0.5rem;
+    }
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── Base ── */
+    html { font-size: 17px; scroll-behavior: smooth; }
+    body {
+      background-color: var(--color-cream);
+      color: var(--color-near-black);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* ── Site Header ── */
+    .site-header {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--color-rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-cream);
+    }
+    .site-header .wordmark {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-forest);
+      text-decoration: none;
+    }
+    .site-header .tagline {
+      font-size: 0.75rem;
+      color: var(--color-mid-gray);
+      letter-spacing: 0.04em;
+    }
+    /* ── Article Layout ── */
+    .article-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) 2rem 6rem;
+    }
+    /* ── Eyebrow / Breadcrumb ── */
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-sage);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .eyebrow a {
+      color: var(--color-sage);
+      text-decoration: none;
+    }
+    .eyebrow a:hover { text-decoration: underline; }
+    .eyebrow .sep { color: var(--color-rule); }
+    /* ── Hero ── */
+    .article-hero { margin-bottom: var(--spacing-xl); }
+    .article-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--color-forest);
+      margin-bottom: var(--spacing-md);
+      max-width: 22ch;
+    }
+    .article-subtitle {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--color-mid-gray);
+      line-height: 1.5;
+      max-width: var(--measure);
+      margin-bottom: var(--spacing-lg);
+      font-style: italic;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--color-rule);
+    }
+    .meta-author {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-near-black);
+    }
+    .meta-date {
+      font-size: 0.8rem;
+      color: var(--color-mid-gray);
+    }
+    .meta-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--color-rule);
+    }
+    /* ── Body Content ── */
+    .article-body {
+      max-width: var(--measure);
+    }
+    .article-body p {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--color-near-black);
+      margin-bottom: 1.5rem;
+    }
+    .article-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--color-forest);
+      margin-top: 3rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.25;
+    }
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--color-rule);
+      margin: 2.5rem 0;
+    }
+    .article-body strong {
+      font-weight: 600;
+      color: var(--color-forest);
+    }
+    .article-body em {
+      font-style: italic;
+      color: var(--color-near-black);
+    }
+    /* ── Pull Quote / Callout ── */
+    .callout {
+      border-left: 3px solid var(--color-gold);
+      padding: 1.25rem 1.5rem;
+      margin: 2.5rem 0;
+      background: rgba(27, 67, 50, 0.04);
+      border-radius: 0 4px 4px 0;
+    }
+    .callout p {
+      font-size: 1.0625rem;
+      font-style: italic;
+      color: var(--color-forest);
+      margin-bottom: 0 !important;
+      line-height: 1.65;
+    }
+    /* ── CTA Block ── */
+    .article-cta {
+      margin-top: 3.5rem;
+      padding: 2rem 2.25rem;
+      background: var(--color-forest);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    .article-cta p {
+      color: rgba(248, 245, 240, 0.85);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 0 !important;
+    }
+    .article-cta p strong {
+      color: var(--color-cream);
+    }
+    .cta-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: var(--color-sage);
+      color: var(--color-cream);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: background 0.15s ease;
+    }
+    .cta-link:hover { background: var(--color-forest-mid); }
+    /* ── Footer ── */
+    .site-footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--color-rule);
+      font-size: 0.8rem;
+      color: var(--color-mid-gray);
+    }
+    .site-footer a { color: var(--color-sage); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .article-wrapper { padding: 2rem 1.25rem 4rem; }
+      .article-title { font-size: 1.875rem; }
+      .article-meta { flex-wrap: wrap; gap: 0.5rem; }
+      .article-cta { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a href="/" class="wordmark">Haios</a>
+    <span class="tagline">Context before compute.</span>
+  </header>
+  <!-- ── Article ── -->
+  <main>
+    <article class="article-wrapper">
+      <!-- Eyebrow -->
+      <div class="eyebrow">
+        <a href="/#insights">Insights</a>
+        <span class="sep">›</span>
+        <span>AI Strategy</span>
+      </div>
+      <!-- Hero -->
+      <header class="article-hero">
+        <h1 class="article-title">Why Your AI Pilot Failed (and It's Not the Model's Fault)</h1>
+        <p class="article-subtitle">You deployed compute before you had context. Here's what that costs and what to do instead.</p>
+        <div class="article-meta">
+          <span class="meta-author">Ron Cohen</span>
+          <span class="meta-sep"></span>
+          <span class="meta-date">March 19, 2026</span>
+        </div>
+      </header>
+      <!-- Body -->
+      <div class="article-body">
+        <p>The pattern is almost universal at this point.</p>
+        <p>A company deploys an AI tool. Week one, the demos look good. Week two, a few people use it. Week three, usage falls off. Week six, someone says it's "on pause pending further evaluation." The model gets blamed — it hallucinated, it didn't understand the nuance, it wasn't trained on the right data.</p>
+        <p>That diagnosis feels right. It's wrong.</p>
+        <p>The model isn't the problem. The problem is what the model didn't have when you handed it the work.</p>
+        <hr />
+        <h2>The thing that's missing isn't better AI</h2>
+        <p>Every organization I've worked with has the same invisible infrastructure problem. The people who are exceptional at their jobs — your best recruiters, your top sales engineers, your sharpest ops leads — carry a form of intelligence that exists nowhere in any system. Not in the CRM. Not in the SOPs. Not in the onboarding docs.</p>
+        <p>It lives in their heads.</p>
+        <p>It's the signal they read when a deal is going sideways before anyone else sees it. It's the instinct that tells them this candidate looks right on paper but won't stick. It's the threshold logic — the invisible line that determines when to escalate, when to hold, when to push. It took years to build. And it's never been written down.</p>
+        <p>When you plug an AI tool into a workflow without that context, you're asking it to do the work of your best people using the knowledge of your newest hires. The model isn't failing. It's operating with an empty tank.</p>
+        <h2>What this actually costs</h2>
+        <p>Most companies calculate the cost of a failed AI pilot in terms of subscription fees and wasted hours. That math understates the problem.</p>
+        <p>The real cost has three parts.</p>
+        <p><strong>The credibility cost.</strong> Your team tried it, it didn't work, and now they've mentally checked out. Getting them back into a new deployment — even a better one — requires overcoming the memory of the last one. Resistance doesn't come from fear of AI. It usually comes from having already been burned by it.</p>
+        <p><strong>The process cost.</strong> A bad deployment doesn't just fail to help — it often makes things worse. People route around it. They develop workarounds for the workaround. The workflow gets messier, not cleaner. By the time you pull the plug, you've added friction to a process that was supposed to get easier.</p>
+        <p><strong>The opportunity cost.</strong> While your team is in "pause mode," the window for competitive advantage in your vertical is narrowing. The companies that get this right in the next 18 months will build operational advantages that are genuinely difficult to replicate. Every failed pilot consumes time you could have spent building something that sticks.</p>
+        <h2>What context actually means</h2>
+        <p>When I say context, I don't mean better prompts. I don't mean feeding the model more documents.</p>
+        <p>I mean the structured capture of how your organization actually thinks.</p>
+        <div class="callout">
+          <p>There's a specific question I ask in every diagnostic interview: <em>What does a new person get wrong that a senior person would never get wrong?</em></p>
+        </div>
+        <p>The answers to that question — those are your context gaps. The exception logic that doesn't appear in any playbook. The override moments where experienced people correct the default and do something different. The threshold calls that look arbitrary until someone with eight years of experience explains why they matter.</p>
+        <p>That knowledge is the difference between an AI tool that produces generic output and one that produces output your team actually uses.</p>
+        <p>One is autocomplete. The other is institutional intelligence made operational.</p>
+        <h2>What to do instead</h2>
+        <p>Before you deploy your next tool, do the extraction work first.</p>
+        <p>That means sitting with your senior people and asking them specific questions about specific situations — not "how does your workflow work?" but "walk me through the last time something went wrong. Start from the beginning." Not "what's your process?" but "when do you know this is going to be hard before you've confirmed it?"</p>
+        <p>The difference between those questions is the difference between getting the sanitized version and getting the real one.</p>
+        <p>Map the decision logic. Identify where human judgment is irreplaceable and where it's just filling a gap that a well-designed system could close. Build that context layer before you build anything else. Then — and only then — wire in the AI.</p>
+        <p>This sequence feels slower. It isn't. Deployments built on context adopt in weeks, not months. They don't hit the wall at week three.</p>
+        <h2>The frame that actually matters</h2>
+        <p>AI doesn't fail because the models are bad. The models are remarkably capable.</p>
+        <p>AI fails because most organizations are trying to scale intelligence they've never bothered to capture.</p>
+        <p>Your best people are walking around carrying proprietary institutional knowledge that your competitors can't access, your new hires can't download, and your AI tools can't use — because it's never existed anywhere except inside a few specific heads.</p>
+        <p>That's the problem worth solving.</p>
+        <p>Not which model to buy next.</p>
+        <!-- CTA -->
+        <div class="article-cta">
+          <p><strong>Haios</strong> helps growing organizations extract and operationalize the decision logic that lives in their best people's heads — before deploying AI on top of it.</p>
+          <a href="/" class="cta-link">Learn more at haios.co</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p><a href="https://haios.co">haios.co</a> &nbsp;·&nbsp; <a href="mailto:ron@haios.ai">ron@haios.ai</a> &nbsp;·&nbsp; © 2026 Haios</p>
+    <p style="margin-top:0.4rem; font-size:0.72rem; letter-spacing:0.04em;">Context before compute. &nbsp;People before tools. &nbsp;Decisions before dashboards.</p>
+  </footer>
+</body>
+</html>
