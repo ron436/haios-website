@@ -193,7 +193,7 @@
 <!-- STEP 2: CHAT -->
 <section id="chatView">
   <div class="chat-header">
-    <div class="progress-dots">
+    <div class="progress-dots" id="progressDots">
       <div class="dot" id="dot1"></div>
       <div class="dot" id="dot2"></div>
       <div class="dot" id="dot3"></div>
@@ -239,9 +239,9 @@
       <button class="form-submit" id="cfSubmit" onclick="submitContact()">Send Me the Full Plan &rarr;</button>
     </div>
     <div class="form-success" id="formSuccess">
-      <div class="ok-icon">&#10003;</div>
-      <h3>We'll be in touch.</h3>
-      <p>Expect your personalized plan within 24 hours.</p>
+      <h3 style="font-family:var(--font-serif);font-size:28px;color:var(--cream);margin-bottom:12px">We'll be in touch within one business day.</h3>
+      <p style="font-size:15px;color:rgba(255,255,255,0.6);max-width:440px;margin:0 auto 20px">Your sprint plan has been noted. Expect a short, direct email from ron@haios.co — not a newsletter, not a pitch.</p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;margin:0">NO PITCH. NO DECK. JUST THE CONVERSATION.</p>
     </div>
   </div>
 </div>
@@ -259,6 +259,7 @@
 // ── STATE ──
 let currentGoal = '';
 let questionIndex = 0;
+let maxQuestions = 3;          // may become 4 if user is new to AI
 let conversationMessages = []; // messages for Claude API
 let chatHistory = [];          // for sprint generation context
 
@@ -313,8 +314,17 @@ function hideTyping() {
 }
 
 function updateDots() {
-  for (let i = 1; i <= 3; i++) {
-    document.getElementById('dot' + i).classList.toggle('filled', i <= questionIndex);
+  // Ensure we have the right number of dots
+  const container = document.getElementById('progressDots');
+  while (container.children.length < maxQuestions) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.id = 'dot' + container.children.length + 1;
+    container.appendChild(dot);
+  }
+  for (let i = 1; i <= maxQuestions; i++) {
+    const dot = document.getElementById('dot' + i);
+    if (dot) dot.classList.toggle('filled', i <= questionIndex);
   }
 }
 
@@ -337,11 +347,27 @@ function sendMessage() {
   // The assistant message was already appended by fetchBotResponse — just add the user reply
   conversationMessages.push({ role: 'user', content: text });
 
+  // After Q3, check if user is new to AI — if so, ask optional Q4
+  if (questionIndex === 3) {
+    const answer = text.toLowerCase();
+    const isNewToAI = /\b(no|none|not really|haven't|havent|starting|scratch|not sure|nothing|zero|nope|don't|dont|never|new to|just starting|not yet|no experience)\b/.test(answer);
+    if (isNewToAI) {
+      maxQuestions = 4;
+      updateDots();
+      questionIndex++;
+      updateDots();
+      // Ask Q4 directly — no API call needed
+      addMessage('bot', "One more — what does a good week look like for your team? What's actually flowing when things are working?");
+      conversationMessages.push({ role: 'assistant', content: "One more — what does a good week look like for your team? What's actually flowing when things are working?" });
+      return;
+    }
+  }
+
   questionIndex++;
   updateDots();
 
-  if (questionIndex > 3) {
-    // All 3 questions answered — generate sprint plan
+  if (questionIndex > maxQuestions) {
+    // All questions answered — generate sprint plan
     setTimeout(() => {
       document.getElementById('chatView').style.display = 'none';
       document.getElementById('generating').style.display = 'flex';
@@ -429,16 +455,18 @@ async function generateSprintPlan() {
     console.error('Sprint generation error:', err);
     // Fallback plan
     renderSprintPlan({
-      title: 'Your Custom AI Sprint',
-      summary: 'Based on your answers, we\'ve identified a clear opportunity to reduce operational costs through targeted AI deployment.',
-      opportunity: 'A custom AI agent trained on your specific business context, designed to automate the workflow bottleneck you described.',
+      problem_reframe: 'Your team is spending hours on work that should take minutes. That cost compounds every week.',
+      ai_opportunity: 'The decisions your best people make every day become infrastructure the whole team operates on. Knowledge stops walking out the door. Work stops being done twice.',
+      sprint_title: 'The Workflow Intelligence Sprint',
       phases: [
-        { label: 'Days 1–3', title: 'Knowledge Extraction', description: 'We map how your team actually makes decisions and identify the implicit rules that drive your workflow.' },
-        { label: 'Days 4–7', title: 'Context Layer Build', description: 'We structure your team\'s knowledge into an AI-ready format that preserves the nuance generic tools miss.' },
-        { label: 'Days 8–14', title: 'Agent Deployment', description: 'We deploy a working AI agent into your workflow and measure the impact against your current baseline.' }
+        { days: 'Days 1–3', title: 'Decision Mapping', description: 'We surface the unwritten rules and judgment calls your best people carry. The patterns that drive real outcomes, not the ones in the process doc.' },
+        { days: 'Days 4–7', title: 'Intelligence Structuring', description: 'Captured knowledge gets organized into a live decision layer that AI can actually operate on. Not a static document — a working system.' },
+        { days: 'Days 8–14', title: 'First Agent Deployment', description: 'One workflow running with context behind it. Your team approves outputs instead of producing them from scratch.' }
       ],
-      captured: 'We capture the implicit decision-making logic your best people use every day, turning individual expertise into a permanent company asset.',
-      outcome: 'A functional AI agent that operates with your team\'s judgment, delivering measurable productivity improvements from day one.'
+      why_haios: 'Most AI projects skip the context layer — they deploy compute before they capture the judgment. That is why they fail.',
+      cortex_capture: 'The implicit decision-making logic your best people use every day becomes a permanent company asset that outlasts any individual.',
+      expected_output: 'A working AI agent operating on your team\'s actual judgment, with measurable productivity improvements from day one.',
+      next_step_label: 'Book a 30-Minute Sprint Call'
     });
   }
 }
@@ -447,8 +475,9 @@ async function generateSprintPlan() {
 function renderSprintPlan(plan) {
   document.getElementById('generating').style.display = 'none';
 
-  // Split title for italic styling
-  const titleParts = plan.title.split(' ');
+  // Split sprint_title for italic styling
+  const title = plan.sprint_title || 'Your Intelligence Sprint';
+  const titleParts = title.split(' ');
   const lastTwoWords = titleParts.slice(-2).join(' ');
   const firstWords = titleParts.slice(0, -2).join(' ');
 
@@ -456,36 +485,41 @@ function renderSprintPlan(plan) {
     <div class="sprint-header">
       <div class="eyebrow">Your Sprint Plan</div>
       <h1>${escapeHtml(firstWords)} <em>${escapeHtml(lastTwoWords)}</em></h1>
-      <p class="sprint-summary">${escapeHtml(plan.summary)}</p>
+      <p class="sprint-summary">${escapeHtml(plan.problem_reframe)}</p>
     </div>
     <div class="sprint-divider"><hr/></div>
     <div class="opportunity-block">
       <div class="opp-inner">
         <div class="opp-label">The Opportunity</div>
-        <div class="opp-text">${escapeHtml(plan.opportunity)}</div>
+        <div class="opp-text">${escapeHtml(plan.ai_opportunity)}</div>
       </div>
     </div>
     <div class="phases">
       ${plan.phases.map(p => `
         <div class="phase">
-          <div class="phase-label">${escapeHtml(p.label)}</div>
+          <div class="phase-label">${escapeHtml(p.days)}</div>
           <h3>${escapeHtml(p.title)}</h3>
           <p>${escapeHtml(p.description)}</p>
         </div>
       `).join('')}
     </div>
+    <div style="max-width:800px;margin:40px auto 0;padding:0 40px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--forest);margin-bottom:12px">WHY THIS APPROACH</div>
+      <p style="font-family:var(--font-sans);font-size:17px;color:var(--ink);line-height:1.7;margin:0">${escapeHtml(plan.why_haios)}</p>
+      <p style="font-family:var(--font-sans);font-size:13px;color:var(--gray);font-style:italic;margin-top:8px">This is what separates a working AI deployment from a failed one.</p>
+    </div>
     <div class="sprint-columns">
       <div class="sprint-col">
         <div class="sprint-col-label">What Gets Captured</div>
-        <p>${escapeHtml(plan.captured)}</p>
+        <p>${escapeHtml(plan.cortex_capture)}</p>
       </div>
       <div class="sprint-col">
         <div class="sprint-col-label">After 14 Days You Have</div>
-        <p>${escapeHtml(plan.outcome)}</p>
+        <p>${escapeHtml(plan.expected_output)}</p>
       </div>
     </div>
     <div class="sprint-tagline">
-      <p>This is the Haios difference. Agents built without this context fail.</p>
+      <p>Context before compute. That is the Haios methodology.</p>
     </div>
   `;
 
@@ -524,8 +558,7 @@ function submitContact() {
     _subject: 'Sprint Diagnostic: ' + (company || name)
   };
 
-  // TODO: Replace with real Formspree endpoint
-  fetch('https://formspree.io/f/mwvrwzqv', {
+  fetch('https://formspree.io/f/xwvradww', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(formData)
