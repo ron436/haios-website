@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Knowledge That Walks Out the Door: Why Growing Teams Lose Their Edge | Haios</title>
+  <meta name="description" content="Your best people carry decision logic that took years to build. What happens when they leave?" />
+  <meta name="author" content="Ron Cohen" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Knowledge That Walks Out the Door: Why Growing Teams Lose Their Edge" />
+  <meta property="og:description" content="Your best people carry decision logic that took years to build. What happens when they leave?" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://haios.co/insights/knowledge-that-walks-out-the-door" />
+  <!-- Canonical -->
+  <link rel="canonical" href="https://haios.co/insights/knowledge-that-walks-out-the-door" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Haios Design Tokens ── */
+    :root {
+      --color-forest:       #1B4332;
+      --color-forest-mid:   #2D6A4F;
+      --color-sage:         #40916C;
+      --color-cream:        #F8F5F0;
+      --color-gold:         #B7934C;
+      --color-near-black:   #1A1A1A;
+      --color-mid-gray:     #6B7280;
+      --color-rule:         #D9D4CC;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --measure:      68ch;
+      --spacing-xl:   4rem;
+      --spacing-lg:   2.5rem;
+      --spacing-md:   1.5rem;
+      --spacing-sm:   1rem;
+      --spacing-xs:   0.5rem;
+    }
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── Base ── */
+    html { font-size: 17px; scroll-behavior: smooth; }
+    body {
+      background-color: var(--color-cream);
+      color: var(--color-near-black);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* ── Site Header ── */
+    .site-header {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--color-rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-cream);
+    }
+    .site-header .wordmark {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-forest);
+      text-decoration: none;
+    }
+    .site-header .tagline {
+      font-size: 0.75rem;
+      color: var(--color-mid-gray);
+      letter-spacing: 0.04em;
+    }
+    /* ── Article Layout ── */
+    .article-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) 2rem 6rem;
+    }
+    /* ── Eyebrow / Breadcrumb ── */
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-sage);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .eyebrow a {
+      color: var(--color-sage);
+      text-decoration: none;
+    }
+    .eyebrow a:hover { text-decoration: underline; }
+    .eyebrow .sep { color: var(--color-rule); }
+    /* ── Hero ── */
+    .article-hero { margin-bottom: var(--spacing-xl); }
+    .article-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--color-forest);
+      margin-bottom: var(--spacing-md);
+      max-width: 24ch;
+    }
+    .article-subtitle {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--color-mid-gray);
+      line-height: 1.5;
+      max-width: var(--measure);
+      margin-bottom: var(--spacing-lg);
+      font-style: italic;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--color-rule);
+      flex-wrap: wrap;
+    }
+    .meta-author {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-near-black);
+    }
+    .meta-date {
+      font-size: 0.8rem;
+      color: var(--color-mid-gray);
+    }
+    .meta-read {
+      font-size: 0.8rem;
+      color: var(--color-mid-gray);
+    }
+    .meta-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--color-rule);
+    }
+    /* ── Body Content ── */
+    .article-body {
+      max-width: var(--measure);
+    }
+    .article-body p {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--color-near-black);
+      margin-bottom: 1.5rem;
+    }
+    .article-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--color-forest);
+      margin-top: 3rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.25;
+    }
+    /* Dividers */
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--color-rule);
+      margin: 2.5rem 0;
+    }
+    /* Strong emphasis */
+    .article-body strong {
+      font-weight: 600;
+      color: var(--color-forest);
+    }
+    /* Italic emphasis */
+    .article-body em {
+      font-style: italic;
+    }
+    /* ── Pull Quote / Callout ── */
+    .callout {
+      border-left: 3px solid var(--color-gold);
+      padding: 1.25rem 1.5rem;
+      margin: 2.5rem 0;
+      background: rgba(27, 67, 50, 0.04);
+      border-radius: 0 4px 4px 0;
+    }
+    .callout p {
+      font-size: 1.0625rem;
+      font-style: italic;
+      color: var(--color-forest);
+      margin-bottom: 0 !important;
+      line-height: 1.65;
+    }
+    /* ── Verbatim Quote Block ── */
+    .verbatim {
+      margin: 2rem 0;
+      padding: 1.5rem 1.75rem;
+      background: rgba(183, 147, 76, 0.07);
+      border-radius: 4px;
+      border: 1px solid rgba(183, 147, 76, 0.2);
+    }
+    .verbatim p {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--color-near-black);
+      margin-bottom: 1rem !important;
+      line-height: 1.7;
+    }
+    .verbatim p:last-child {
+      margin-bottom: 0 !important;
+    }
+    /* ── CTA Block ── */
+    .article-cta {
+      margin-top: 3.5rem;
+      padding: 2rem 2.25rem;
+      background: var(--color-forest);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    .article-cta p {
+      color: rgba(248, 245, 240, 0.85);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 0 !important;
+    }
+    .article-cta p strong {
+      color: var(--color-cream);
+    }
+    .cta-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: var(--color-sage);
+      color: var(--color-cream);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: background 0.15s ease;
+    }
+    .cta-link:hover { background: var(--color-forest-mid); }
+    /* ── Footer ── */
+    .site-footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--color-rule);
+      font-size: 0.8rem;
+      color: var(--color-mid-gray);
+    }
+    .site-footer a { color: var(--color-sage); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .article-wrapper { padding: 2rem 1.25rem 4rem; }
+      .article-title { font-size: 1.875rem; }
+      .article-meta { gap: 0.5rem; }
+      .article-cta { padding: 1.5rem; }
+      .verbatim { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a href="/" class="wordmark">Haios</a>
+    <span class="tagline">Context before compute.</span>
+  </header>
+  <!-- ── Article ── -->
+  <main>
+    <article class="article-wrapper">
+      <!-- Eyebrow -->
+      <div class="eyebrow">
+        <a href="/#insights">Insights</a>
+        <span class="sep">›</span>
+        <span>Strategy</span>
+      </div>
+      <!-- Hero -->
+      <header class="article-hero">
+        <h1 class="article-title">The Knowledge That Walks Out the Door: Why Growing Teams Lose Their Edge</h1>
+        <p class="article-subtitle">Your best people carry decision logic that took years to build. What happens when they leave?</p>
+        <div class="article-meta">
+          <span class="meta-author">Ron Cohen</span>
+          <span class="meta-sep"></span>
+          <span class="meta-date">March 19, 2026</span>
+          <span class="meta-sep"></span>
+          <span class="meta-read">7 min read</span>
+        </div>
+      </header>
+      <!-- Body -->
+      <div class="article-body">
+        <p>There's a conversation that happens in almost every growing company, usually around the time they hit 30 or 50 people. A senior leader — one of the originals, someone who built the thing from the ground up — gives notice.</p>
+        <p>The reaction is always the same. There's the personal loss, which is real. And then, underneath it, there's a quieter, more unsettling realization: we don't actually know everything she knew.</p>
+        <p>Not the job description stuff. Not the things in the onboarding docs. The other stuff. The judgment calls. The pattern recognition. The instincts she'd developed about clients, about when deals were actually solid versus when they just sounded solid. The mental model she'd built — call by call, mistake by mistake — about how this specific business actually works.</p>
+        <p>That knowledge is leaving with her. And nobody captured it.</p>
+        <hr />
+        <h2>Why this keeps happening</h2>
+        <p>Growing companies are, almost by definition, running too fast to stop and document what they know.</p>
+        <p>The people carrying the most institutional knowledge are usually the most stretched. They're in the meetings, running the accounts, making the calls. They don't have time to write down how they think. And honestly, most of them couldn't if they tried — the knowledge is so deeply embedded in their daily judgment that they've stopped noticing it's there.</p>
+        <p>This is what researchers call tacit knowledge: the kind of expertise that lives in practice, not in documentation. A master craftsman can't fully explain why a piece of wood doesn't feel right. An experienced recruiter can't fully explain why a candidate interview gave her pause. An ops leader can't fully explain why this vendor situation is going to blow up before it does.</p>
+        <p>They just know. And the knowing is the product of time — time inside a specific industry, inside a specific company, watching patterns play out and adjusting their mental models accordingly.</p>
+        <p>Here's the problem. That knowledge is extraordinarily valuable. It's also extraordinarily fragile.</p>
+        <h2>The three ways it disappears</h2>
+        <p>Growing teams don't just lose knowledge when people leave. They lose it in three distinct ways, and the least obvious one is probably the most expensive.</p>
+        <p><strong>When people leave.</strong> This is the one everyone talks about. Someone resigns, and there's a two-week scramble to extract everything they know before they're gone. You get a hastily assembled transition doc that covers the surface stuff — the accounts, the contacts, the current projects. What you don't get is the decision logic underneath it all. The new person starts from scratch. They'll need two years to develop what their predecessor had.</p>
+        <p><strong>When teams scale.</strong> This one is subtler. When a company doubles in size, the people who carry the institutional knowledge become a smaller percentage of the team. The new hires outnumber the tenured staff. Suddenly the way the company actually makes decisions — the real way, not the documented way — starts to dilute. Process drift sets in. Inconsistency becomes visible in client work. Quality variance shows up in outputs that should be standardized.</p>
+        <p><strong>When nothing is wrong.</strong> This is the one nobody talks about. In day-to-day operations, knowledge transfer happens informally. The senior person sits next to the junior person. They talk through situations. The junior person asks questions and the senior person answers them. Over time, some of the tacit knowledge transfers.</p>
+        <p>When a company shifts to hybrid or distributed work, that ambient knowledge transfer largely stops. The conversations that used to happen in passing don't happen at all. The junior team members don't even know what questions to ask, because they don't yet know what they don't know. The knowledge doesn't walk out the door. It just stops moving.</p>
+        <h2>What the cost actually looks like</h2>
+        <p>The finance people will ask for a number. Here's one framing.</p>
+        <p>Take a company with 10 sales engineers. Each one, after 18 months on the job, has developed a set of judgment calls that meaningfully improves their output — how they qualify opportunities, how they handle specific objection patterns, how they read which deals to prioritize. Call it a 20% productivity premium for the tenured engineers over the new ones.</p>
+        <p>Now assume 30% annual turnover, which is conservative for most sales-adjacent roles. That's 3 people per year cycling out. 3 new hires starting from zero. 18 months before they start contributing at full effectiveness.</p>
+        <p>At any given moment, roughly 30–40% of your team is operating below the productivity level your best people have already demonstrated is achievable. Not because they're not capable. Because they haven't had time yet to build the knowledge that doesn't exist in any system.</p>
+        <p>That gap — between what your best people know and what your average people know — is the hidden cost. It shows up as longer ramp times, higher error rates, inconsistent client experiences, and the permanent sensation that you're rebuilding the same competency over and over.</p>
+        <h2>The question nobody asks in the exit interview</h2>
+        <p>Exit interviews focus on feelings. Why are you leaving? What could we have done differently? How was your manager?</p>
+        <p>The more operationally important question almost never gets asked: <em>What do you know about how this business works that isn't written down anywhere?</em></p>
+        <div class="callout">
+          <p>I've started calling this the Gold Question — because the answers it surfaces are genuinely that valuable. When you ask it well, you hear things like:</p>
+        </div>
+        <div class="verbatim">
+          <p>"The reason we always lose to Competitor X on deals above $200K isn't price — it's that their enterprise team has a relationship with the legal function that we've never been able to crack. I've been routing around this for three years but nobody else knows to look for it."</p>
+          <p>"The way we scope services projects is wrong. We always underestimate the discovery phase by about 40% because the project managers are estimating based on what clients say they want, not what we know they actually need. I recalibrate every estimate in my head before I approve it. Nobody else does this."</p>
+          <p>"Client X calls in crisis mode twice a year. It's not actually a crisis. It's a pattern tied to their board cycle. If you respond with urgency, you create more chaos. If you wait 48 hours and come back with a calm analysis, it de-escalates. I learned this in year two. I don't think I've ever told anyone."</p>
+        </div>
+        <p>This is the knowledge that's walking out. And in most organizations, it walks out without a word.</p>
+        <h2>What capturing it actually requires</h2>
+        <p>The tempting solution is documentation. Build a knowledge base. Create a wiki. Write the playbooks.</p>
+        <p>This doesn't work — at least not at first. Not because documentation is bad, but because asking people to document their own tacit knowledge is like asking someone to describe how they ride a bike. They'll give you the steps. They won't be able to give you the balance.</p>
+        <p>What actually works is structured extraction — a conversation methodology designed to surface the knowledge that doesn't come out in direct questioning.</p>
+        <p>You don't ask "how does your process work?" You ask "walk me through the last time a deal fell apart at the final stage. Start from the beginning." You don't ask "what are the key signals in a client situation?" You ask "when do you know something is going to go wrong before you have any confirmation of it? What are you reading?"</p>
+        <p>The stories are the knowledge. The process description is the sanitized version. The specific, messy, particular story of a real situation is where the decision logic actually lives.</p>
+        <p>Once you have those stories — from your best people, across multiple roles, collected systematically — you can start to build something durable. Not a document. A structured map of how your organization actually makes decisions. The exception logic. The threshold calls. The signals that experienced people read that newer people don't yet know to look for.</p>
+        <p>That map is what survives turnover. What accelerates new hire ramp time. What gives your AI tools something real to work with.</p>
+        <h2>The compounding problem</h2>
+        <p>There's one more dimension worth naming.</p>
+        <p>As organizations grow, the knowledge gap doesn't just persist — it compounds. Each year of undocumented institutional knowledge is a year harder to reconstruct. The people who could have explained the original context get further from it. The decisions that shaped how the company works become harder to trace. The "why we do it this way" becomes "we've always done it this way."</p>
+        <p>At some point, organizations start making decisions that contradict the hard-won lessons of their early years. Not because they've forgotten — but because the knowledge that would have prevented it was never captured in a form that could be passed on.</p>
+        <p>The companies that avoid this aren't the ones who scale fastest. They're the ones who slow down long enough to capture what they know before they grow past it.</p>
+        <hr />
+        <p>That conversation about the departing senior leader? It doesn't have to end with the quiet, unsettling realization.</p>
+        <p>It can end with: we have this. We captured it. It lives in the system now, not just in her head.</p>
+        <p>That's not a technology problem. It's an organizational discipline problem.</p>
+        <p>And it's solvable — but only if you start before you need to.</p>
+        <!-- CTA -->
+        <div class="article-cta">
+          <p><strong>Haios</strong> helps growing organizations extract and operationalize the decision logic that lives in their best people's heads — before it walks out the door.</p>
+          <a href="/" class="cta-link">Learn more at haios.co</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p><a href="https://haios.co">haios.co</a> &nbsp;·&nbsp; <a href="mailto:ron@haios.ai">ron@haios.ai</a> &nbsp;·&nbsp; © 2026 Haios</p>
+    <p style="margin-top:0.4rem; font-size:0.72rem; letter-spacing:0.04em;">Context before compute. &nbsp;People before tools. &nbsp;Decisions before dashboards.</p>
+  </footer>
+</body>
+</html>
