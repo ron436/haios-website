@@ -62,7 +62,7 @@
     .hero-rings{position:absolute;inset:0;opacity:0.04}
     .hero-rings circle{fill:none;stroke:var(--sage);stroke-width:0.6}
     .hero-grain{position:absolute;inset:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px}
-    .hero-layout{position:relative;display:grid;grid-template-columns:1fr 400px;gap:64px;align-items:center}
+    .hero-layout{position:relative;display:grid;grid-template-columns:1fr 460px;gap:64px;align-items:center}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);border:1px solid rgba(64,145,108,0.3);padding:7px 14px;border-radius:2px;margin-bottom:28px;opacity:0;animation:fadeUp .7s ease .1s forwards}
     .hero-dot{width:5px;height:5px;border-radius:50%;background:var(--sage)}
     h1{font-family:var(--font-serif);font-size:clamp(42px,6vw,78px);font-weight:400;line-height:1.06;color:#fff;margin-bottom:24px;opacity:0;animation:fadeUp .8s ease .25s forwards}
@@ -79,6 +79,8 @@
     .stat-num{font-family:var(--font-serif);font-size:48px;color:#fff;line-height:1;margin-bottom:5px}
     .stat-num em{font-style:italic;color:var(--sage)}
     .stat-label{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.45}
+    .hero-canvas-wrap{position:relative;width:100%;height:420px;opacity:0;animation:fadeUp .9s ease .5s forwards}
+    .hero-canvas-wrap canvas{width:100%;height:100%;display:block}
     .hero-scroll{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.2);animation:floatY 2.5s ease-in-out infinite}
     .hero-scroll svg{width:16px;height:16px}
 
@@ -240,11 +242,12 @@
 
     /* RESPONSIVE */
     @media(max-width:960px){
-      .hero-layout,.two-col,.svc-layout,.audit-layout,.ft-top,.fly-layout{grid-template-columns:1fr;gap:40px}
+      .hero-layout,.hero-canvas-wrap,.two-col,.svc-layout,.audit-layout,.ft-top,.fly-layout{grid-template-columns:1fr;gap:40px}
       .steps,.ins-grid{grid-template-columns:1fr 1fr}
       .res-grid{grid-template-columns:1fr 1fr}
       .nav-links{display:none}
       .mobile-toggle{display:block}
+      .hero-canvas-wrap{height:280px}
       .hero-stats{grid-template-columns:1fr 1fr}
       .fly-svg-wrap{width:300px;height:300px;margin:0 auto}
       .tag-strip{padding:18px 0}
@@ -256,6 +259,7 @@
       h1{font-size:38px}
       .container{padding:0 22px}
       section{padding:64px 0}
+      .hero-canvas-wrap{height:260px}
       .hero-stats{gap:2px}
       .stat-num{font-size:38px}
     }
@@ -293,52 +297,40 @@
   <div class="hero-atmos">
     <div class="g1"></div><div class="g2"></div><div class="g3"></div>
   </div>
-  <svg class="hero-rings" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-    <circle cx="200" cy="150" r="80"><animateTransform attributeName="transform" type="rotate" values="0 200 150;360 200 150" dur="45s" repeatCount="indefinite"/></circle>
-    <circle cx="1250" cy="280" r="110"><animateTransform attributeName="transform" type="rotate" values="360 1250 280;0 1250 280" dur="55s" repeatCount="indefinite"/></circle>
-    <circle cx="850" cy="720" r="65"><animateTransform attributeName="transform" type="rotate" values="0 850 720;360 850 720" dur="35s" repeatCount="indefinite"/></circle>
-    <circle cx="400" cy="650" r="140" stroke-dasharray="4 8"><animateTransform attributeName="transform" type="rotate" values="0 400 650;360 400 650" dur="70s" repeatCount="indefinite"/></circle>
-  </svg>
   <div class="hero-grain"></div>
   <div class="container">
     <div class="hero-layout">
+      <!-- LEFT: TEXT -->
       <div>
         <div class="hero-badge">
           <div class="hero-dot"></div>
-          The Operating System for Human-AI Work
+          Decision Intelligence
         </div>
-        <h1>Your best thinking,<br><em>finally scalable.</em></h1>
-        <p class="hero-sub">We extract how your best people think. Then we build AI agents that operate with the same judgment, at scale.</p>
+        <h1 id="hero-h1-line1">AI that carries your<br>
+          <em id="hero-rotating-word">judgment.</em>
+        </h1>
+        <p class="hero-sub">Most AI deployments fail because they skip
+        the context layer. We build it first — capturing the decision
+        logic your best people carry and turning it into infrastructure
+        AI can actually operate on. In 14 days.</p>
         <div class="hero-actions">
           <a href="/diagnose" class="btn btn-hero">
             Try the Sprint Diagnostic
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+              stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </a>
           <a href="#flywheel" class="btn-ghost">See How It Works</a>
         </div>
       </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="stat-num"><em>72</em> hrs</div>
-          <div class="stat-label">To a full AI overview of your business</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num"><em>14</em> days</div>
-          <div class="stat-label">From zero to a business-trained AI agent</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num"><em>40%</em>+</div>
-          <div class="stat-label">Average improvement in workflow productivity</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num">Day <em>1</em></div>
-          <div class="stat-label">ROI positive from first deployment</div>
-        </div>
+      <!-- RIGHT: PULSE RINGS CANVAS -->
+      <div class="hero-canvas-wrap">
+        <canvas id="heroCanvas"></canvas>
       </div>
     </div>
   </div>
   <div class="hero-scroll">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M4 9l4 4 4-4"/></svg>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor"
+      stroke-width="1.5"><path d="M8 3v10M4 9l4 4 4-4"/></svg>
     Scroll
   </div>
 </section>
@@ -707,6 +699,112 @@
 </footer>
 
 <script>
+// ── ROTATING HEADLINE WORD ──────────────────────────────
+const rotWords = ['judgment.','context.','decisions.','intelligence.'];
+let rotIdx = 0;
+const rotEl = document.getElementById('hero-rotating-word');
+function rotateWord() {
+  if (!rotEl) return;
+  rotEl.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+  rotEl.style.opacity = '0';
+  rotEl.style.transform = 'translateY(10px)';
+  setTimeout(() => {
+    rotIdx = (rotIdx + 1) % rotWords.length;
+    rotEl.textContent = rotWords[rotIdx];
+    rotEl.style.opacity = '1';
+    rotEl.style.transform = 'translateY(0)';
+  }, 380);
+}
+setInterval(rotateWord, 2400);
+
+// ── PULSE RINGS CANVAS ──────────────────────────────────
+(function () {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const wrap = canvas.parentElement;
+  function resize() {
+    canvas.width = wrap.offsetWidth;
+    canvas.height = wrap.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  const ctx = canvas.getContext('2d');
+  const SAGE   = [64, 145, 108];
+  const GOLD   = [183, 147, 76];
+  const CREAM  = [248, 245, 240];
+  const ringPalette = [SAGE, GOLD, SAGE, CREAM];
+  const rings = [];
+  let paletteIdx = 0;
+  let t = 0;
+  function addRing() {
+    const col = ringPalette[paletteIdx % ringPalette.length];
+    paletteIdx++;
+    rings.push({ r: 8, alpha: 0.8, speed: 0.9 + Math.random() * 0.45, col });
+  }
+  addRing();
+  setInterval(addRing, 720);
+  function draw() {
+    const W = canvas.width;
+    const H = canvas.height;
+    const cx = W / 2;
+    const cy = H / 2;
+    ctx.clearRect(0, 0, W, H);
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(W,H)*0.6);
+    grd.addColorStop(0, 'rgba(183,147,76,0.07)');
+    grd.addColorStop(0.5, 'rgba(64,145,108,0.05)');
+    grd.addColorStop(1, 'rgba(27,67,50,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < W; x += 44) {
+      ctx.strokeStyle = 'rgba(64,145,108,0.07)';
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += 44) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const rn = rings[i];
+      const [r, g, b] = rn.col;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rn.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${r},${g},${b},${rn.alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      rn.r += rn.speed;
+      rn.alpha -= 0.006;
+      if (rn.alpha <= 0) rings.splice(i, 1);
+    }
+    t += 0.02;
+    const p = 0.5 + 0.5 * Math.sin(t * 2.5);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20 + p * 7, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(64,145,108,${0.1 * p})`;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 12 + p * 3, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(183,147,76,${0.22 * p})`;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#B7934C';
+    ctx.fill();
+    [[cx, cy - 100], [cx + 100, cy], [cx, cy + 100], [cx - 100, cy]]
+      .forEach(([tx, ty]) => {
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(tx - 5, ty); ctx.lineTo(tx + 5, ty); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tx, ty - 5); ctx.lineTo(tx, ty + 5); ctx.stroke();
+      });
+    ctx.font = '500 10px DM Sans, Arial, sans-serif';
+    ctx.fillStyle = 'rgba(183,147,76,0.45)';
+    ctx.textAlign = 'center';
+    ctx.fillText('DECISION INTELLIGENCE', cx, cy + 44);
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
 // Nav scroll
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>40));
