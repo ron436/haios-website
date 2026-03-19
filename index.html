@@ -274,7 +274,7 @@
       <li><a href="#flywheel">How It Works</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#insights">Insights</a></li>
-      <li><a href="#audit">AI Value Audit</a></li>
+      <li><a href="/diagnose">Sprint Diagnostic</a></li>
     </ul>
     <a href="#contact" class="nav-cta">Get in Touch</a>
     <button class="mobile-toggle" onclick="document.getElementById('mobMenu').classList.toggle('open')">☰</button>
@@ -284,7 +284,7 @@
   <a href="#flywheel" onclick="document.getElementById('mobMenu').classList.remove('open')">How It Works</a>
   <a href="#services" onclick="document.getElementById('mobMenu').classList.remove('open')">Services</a>
   <a href="#insights" onclick="document.getElementById('mobMenu').classList.remove('open')">Insights</a>
-  <a href="#audit" onclick="document.getElementById('mobMenu').classList.remove('open')">AI Value Audit</a>
+  <a href="/diagnose" onclick="document.getElementById('mobMenu').classList.remove('open')">Sprint Diagnostic</a>
   <a href="#contact" onclick="document.getElementById('mobMenu').classList.remove('open')">Get in Touch</a>
 </div>
 
@@ -310,11 +310,10 @@
         <h1>Your best thinking,<br><em>finally scalable.</em></h1>
         <p class="hero-sub">We extract how your best people think. Then we build AI agents that operate with the same judgment, at scale.</p>
         <div class="hero-actions">
-          <a href="#contact" class="btn btn-hero">
-            Book an AI Value Audit
+          <a href="/diagnose" class="btn btn-hero">
+            Try the Sprint Diagnostic
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </a>
-          <a href="/diagnose" class="btn-ghost">Try the Sprint Diagnostic &rarr;</a>
           <a href="#flywheel" class="btn-ghost">See How It Works</a>
         </div>
       </div>
@@ -586,44 +585,60 @@
   </div>
 </section>
 
-<!-- AI AUDIT -->
-<section id="audit">
+<!-- SPRINT DIAGNOSTIC -->
+<section id="diagnose" style="background:var(--forest);padding:100px 0">
   <div class="container">
-    <div class="audit-layout">
-      <div class="audit-left reveal">
-        <div class="audit-badge"><div class="ab-dot"></div>Free Diagnostic</div>
-        <span class="eyebrow">The AI Value Audit Tool</span>
-        <h2>Get your audit<br><em>before we talk.</em></h2>
-        <p>A self-serve diagnostic powered by the same methodology we use in every sprint. Maps your AI readiness and surfaces your highest-ROI workflow opportunities.</p>
-        <div class="audit-feats">
-          <div class="audit-feat">
-            <div class="af-num">1</div>
-            <div class="af-body">
-              <strong>15-minute structured intake</strong>
-              <p>Answer questions about your team, workflows, and biggest friction points.</p>
-            </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+      <div class="reveal">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);border:1px solid rgba(64,145,108,0.3);padding:7px 14px;border-radius:2px;margin-bottom:24px">
+          <div style="width:5px;height:5px;border-radius:50%;background:var(--sage)"></div>
+          Free Diagnostic
+        </div>
+        <h2 style="font-family:var(--font-serif);font-size:clamp(32px,4vw,52px);color:#fff;line-height:1.1;margin-bottom:20px">
+          Find out exactly where AI<br><em style="color:var(--sage)">fits your business.</em>
+        </h2>
+        <p style="font-size:17px;font-weight:300;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:36px;max-width:440px">
+          Answer 3 questions. Get a personalized 14-day sprint plan built around your specific problem. No pitch. No deck.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px">
+          <div style="display:flex;align-items:flex-start;gap:14px">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(64,145,108,0.15);border:1px solid rgba(64,145,108,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--sage);flex-shrink:0;margin-top:2px">1</div>
+            <div><strong style="color:#fff;font-size:14px">Pick your biggest problem</strong><p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:3px">Cut costs, move faster, or find where AI fits.</p></div>
           </div>
-          <div class="audit-feat">
-            <div class="af-num">2</div>
-            <div class="af-body">
-              <strong>AI-generated diagnostic report</strong>
-              <p>Your top AI opportunities ranked by ROI, with estimated time and cost savings.</p>
-            </div>
+          <div style="display:flex;align-items:flex-start;gap:14px">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(64,145,108,0.15);border:1px solid rgba(64,145,108,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--sage);flex-shrink:0;margin-top:2px">2</div>
+            <div><strong style="color:#fff;font-size:14px">Answer 3 short questions</strong><p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:3px">Industry, where time bleeds, current AI experience.</p></div>
           </div>
-          <div class="audit-feat">
-            <div class="af-num">3</div>
-            <div class="af-body">
-              <strong>No pitch. Just signal.</strong>
-              <p>A real diagnostic. Useful whether you work with Haios or not.</p>
-            </div>
+          <div style="display:flex;align-items:flex-start;gap:14px">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(64,145,108,0.15);border:1px solid rgba(64,145,108,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--sage);flex-shrink:0;margin-top:2px">3</div>
+            <div><strong style="color:#fff;font-size:14px">Get your named sprint plan</strong><p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:3px">A real 14-day plan for your specific business, not a template.</p></div>
           </div>
         </div>
-      </div>
-      <div class="reveal">
-        <a href="#contact" class="btn btn-primary" style="font-size:15px;padding:18px 36px">
-          Take the Audit
+        <a href="/diagnose" class="btn btn-hero" style="font-size:15px;padding:18px 36px">
+          Run the Sprint Diagnostic
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
+        <p style="margin-top:16px;font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:0.05em">
+          NO PITCH. NO DECK. JUST THE PLAN.
+        </p>
+      </div>
+      <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+        <div style="padding:28px 24px;background:rgba(255,255,255,0.04);border:1px solid rgba(64,145,108,0.18)">
+          <div style="font-family:var(--font-serif);font-size:42px;color:#fff;line-height:1;margin-bottom:6px"><em style="color:var(--sage)">3</em></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5">Questions to a complete sprint plan</div>
+        </div>
+        <div style="padding:28px 24px;background:rgba(255,255,255,0.04);border:1px solid rgba(64,145,108,0.18)">
+          <div style="font-family:var(--font-serif);font-size:42px;color:#fff;line-height:1;margin-bottom:6px"><em style="color:var(--sage)">14</em></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5">Day sprint built around your specific problem</div>
+        </div>
+        <div style="padding:28px 24px;background:rgba(255,255,255,0.04);border:1px solid rgba(64,145,108,0.18)">
+          <div style="font-family:var(--font-serif);font-size:42px;color:#fff;line-height:1;margin-bottom:6px"><em style="color:var(--sage)">$0</em></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5">The diagnostic is free, no strings attached</div>
+        </div>
+        <div style="padding:28px 24px;background:rgba(255,255,255,0.04);border:1px solid rgba(64,145,108,0.18)">
+          <div style="font-family:var(--font-serif);font-size:42px;color:#fff;line-height:1;margin-bottom:6px">Day <em style="color:var(--sage)">1</em></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5">ROI positive from first deployment</div>
+        </div>
       </div>
     </div>
   </div>
