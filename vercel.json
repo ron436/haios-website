@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/diagnose", "destination": "/diagnose.html" },
     { "source": "/insights/why-your-ai-pilot-failed", "destination": "/insights/why-your-ai-pilot-failed.html" },
-    { "source": "/insights/knowledge-that-walks-out-the-door", "destination": "/insights/knowledge-that-walks-out-the-door.html" }
+    { "source": "/insights/knowledge-that-walks-out-the-door", "destination": "/insights/knowledge-that-walks-out-the-door.html" },
+    { "source": "/insights/tacit-knowledge-competitive-advantage", "destination": "/insights/tacit-knowledge-competitive-advantage.html" }
   ]
 }
